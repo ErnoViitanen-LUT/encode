@@ -17,6 +17,10 @@ brew install terminal-notifier
 sudo ln ~/development/encode/encode.sh /usr/local/bin/encode
 ```
 
+## Configure
+
+Set RECORDINGS_DIRECTORY at line 32 (encode.sh)
+
 ## Usage
 
 ```shell
