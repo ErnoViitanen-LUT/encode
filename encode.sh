@@ -1,6 +1,7 @@
 #!/bin/sh
 #brew install ffmpeg
 #brew install imagemagick
+# gifsicle ?
 
 function handleopts {
   while test "$1" != ""; do
