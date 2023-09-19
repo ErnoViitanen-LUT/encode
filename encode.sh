@@ -11,6 +11,7 @@ function handleopts {
         -o|--output) OUTPUT_FILE=$2; shift ;;
         -s|--speed) SPEED_FACTOR=$2; shift ;;
         -g|--gif) GIF_FILE=true; shift ;;
+        -h|--high) HIGH_RESOLUTION=true; shift ;;
         -l|--low) LOW_RESOLUTION=true; shift ;;
         -te|--trimend) TRIM_EOF_DURATION=$2; shift ;;
         -t|--threads) NUMBER_OF_THREADS=$2; shift ;;
@@ -55,7 +56,13 @@ FILENAME_ONLY_PATH="${BASE_PATH}/${FILENAME_ONLY}"
 
 
 if [ $GIF_FILE ]; then
-  OUTPUT_FILE_EXT="${FILENAME_ONLY_PATH}.gif"
+  if [ $HIGH_RESOLUTION ]; then
+    OUTPUT_FILE_EXT="${FILENAME_ONLY_PATH}-highres.gif"
+  elif [ $LOW_RESOLUTION ]; then
+    OUTPUT_FILE_EXT="${FILENAME_ONLY_PATH}-lowres.gif"
+  else
+    OUTPUT_FILE_EXT="${FILENAME_ONLY_PATH}.gif"
+  fi
 else
   OUTPUT_FILE_EXT="${FILENAME_ONLY_PATH}.mp4"
 fi
@@ -77,10 +84,12 @@ echo "OUTPUT_FILE $OUTPUT_FILE_EXT"
 echo "INPUT/OUTPUT_DURATION $INPUT_DURATION/$OUTPUT_DURATION"
 
 if [ $GIF_FILE ]; then
-  if [ $LOW_RESOLUTION ]; then
-    ffscript="ffmpeg -i $FILENAME_NO_SPACES -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR}' -af atempo=$SPEED_FACTOR -pix_fmt rgb24 -r 5 -f gif $OUTPUT_FILE_EXT"
+  if [ $HIGH_RESOLUTION ]; then
+    ffscript="ffmpeg -i $FILENAME_NO_SPACES -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -af atempo=$SPEED_FACTOR -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR},fps=20,scale=-1:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse' -f gif $OUTPUT_FILE_EXT"
+  elif [ $LOW_RESOLUTION ]; then
+    ffscript="ffmpeg -i $FILENAME_NO_SPACES -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -af atempo=$SPEED_FACTOR -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR},fps=8,scale=iw/3:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse' -f gif $OUTPUT_FILE_EXT"
   else
-    ffscript="ffmpeg -i $FILENAME_NO_SPACES -r 23.976 -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR}' -af atempo=$SPEED_FACTOR $OUTPUT_FILE_EXT && gifsicle -O3 $OUTPUT_FILE_EXT -o $OUTPUT_FILE_EXT"
+    ffscript="ffmpeg -i $FILENAME_NO_SPACES -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -af atempo=$SPEED_FACTOR -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR},fps=10,scale=iw/2:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse' -f gif $OUTPUT_FILE_EXT"
   fi
 else
   ffscript="ffmpeg -i $FILENAME_NO_SPACES -r 23.976 -threads $NUMBER_OF_THREADS -t '$OUTPUT_DURATION' -vf 'setpts=(PTS-STARTPTS)/${SPEED_FACTOR}' -af atempo=$SPEED_FACTOR $OUTPUT_FILE_EXT"

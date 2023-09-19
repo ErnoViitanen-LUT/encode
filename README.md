@@ -35,8 +35,11 @@ encode -i "/Users/Macchi/Pictures/Screenshots/Screen-Recording-2022-01-28-at-14.
 
 ## Options
 
-   - -i | --input) INPUT_FILE, defaults to last .mov file from defined directory
-   - -o | --output) OUTPUT_FILE, defaults to input.mp4
-   - -s | --speed) SPEED_FACTOR, defaults to 1.5x
-   - -te | --trimend) TRIM_EOF_DURATION, defaults to 0 seconds
-   - -t | --threads) NUMBER_OF_THREADS, defaults to 4 threads
+- -i | --input) INPUT_FILE, defaults to last .mov file from defined directory
+- -o | --output) OUTPUT_FILE, defaults to input.mp4
+- -s | --speed) SPEED_FACTOR, defaults to 1.5x
+- -te | --trimend) TRIM_EOF_DURATION, defaults to 0 seconds
+- -t | --threads) NUMBER_OF_THREADS, defaults to 4 threads
+- -g | --gif) GIF_FILE, generate gif instead of mp4
+- -h | --high) HIGH_RESOLUTION, generate high resolution gif
+- -l | --low) LOW_RESOLUTION, generate low resolution gif
