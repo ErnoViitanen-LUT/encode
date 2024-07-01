@@ -43,3 +43,4 @@ encode -i "/Users/Macchi/Pictures/Screenshots/Screen-Recording-2022-01-28-at-14.
 - -g | --gif) GIF_FILE, generate gif instead of mp4
 - -h | --high) HIGH_RESOLUTION, generate high resolution gif
 - -l | --low) LOW_RESOLUTION, generate low resolution gif
+- -f | --fps) FPS, defaults to 10 frames per second
